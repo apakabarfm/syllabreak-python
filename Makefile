@@ -12,3 +12,6 @@ lint:
 format:
 	venv/bin/ruff check --fix syllabreak/
 	venv/bin/ruff format syllabreak/
+
+examples:
+	venv/bin/python -m doctest examples.py -v
