@@ -4,6 +4,7 @@ install:
 
 test:
 	venv/bin/pytest syllabreak/
+	venv/bin/pytest test_readme.py
 
 lint:
 	venv/bin/ruff check syllabreak/
@@ -12,6 +13,3 @@ lint:
 format:
 	venv/bin/ruff check --fix syllabreak/
 	venv/bin/ruff format syllabreak/
-
-examples:
-	venv/bin/python -m doctest examples.py -v
