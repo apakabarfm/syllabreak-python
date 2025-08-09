@@ -14,3 +14,16 @@ Multilingual library for accurate and deterministic hyphenation and syllable cou
 >>> s.detect_language("hello")
 ['en']
 ```
+
+## Language Detection
+
+The library returns all matching languages sorted by confidence:
+
+```python
+>>> from syllabreak import Syllabreak
+>>> s = Syllabreak()
+>>> s.detect_language("hello")
+['eng', 'srp-latn']  # Matches both English and Serbian Latin
+>>> s.detect_language("čovek")
+['srp-latn']  # Serbian Latin with unique letter č
+```

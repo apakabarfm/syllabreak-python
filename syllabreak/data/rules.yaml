@@ -25,8 +25,7 @@ rules:
     modifiers_attach_right: ""
     modifiers_separators: "ъ"
 
-  - lang3: "srp"
-    script: "cyrl"
+  - lang3: "srp-cyrl"
     vowels: "аиуео"
     consonants: "бвгдђжзјклљмнњпрстћфхцчџш"
     sonorants: "лљмнњрј"
@@ -39,8 +38,7 @@ rules:
     modifiers_attach_right: ""
     modifiers_separators: ""
 
-  - lang3: "srp"
-    script: "latn"
+  - lang3: "srp-latn"
     vowels: "aeiou"
     consonants: "bcčćdžđfghjklmnprsštvzž"
     sonorants: "lmnrj"

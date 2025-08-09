@@ -1,6 +1,61 @@
+class MetaRule:
+    """Aggregates information about all language rules and provides cross-language analysis"""
+    
+    def __init__(self, rules: list):
+        self.rules = rules
+        self._calculate_unique_chars()
+        self._link_rules_to_meta()
+    
+    def _calculate_unique_chars(self):
+        """Calculate unique characters for each language rule"""
+        for rule in self.rules:
+            rule.unique_chars = rule._all_chars.copy()
+            for other_rule in self.rules:
+                if other_rule.lang3 != rule.lang3:
+                    rule.unique_chars -= other_rule._all_chars
+    
+    def _link_rules_to_meta(self):
+        """Link each rule back to this meta rule"""
+        for rule in self.rules:
+            rule.meta = self
+    
+    def get_all_known_chars(self) -> set[str]:
+        """Get all characters from all languages"""
+        all_chars = set()
+        for rule in self.rules:
+            all_chars |= rule._all_chars
+        return all_chars
+    
+    def find_matches(self, text: str) -> list:
+        """Find all matching languages for the text, sorted by score"""
+        if not text:
+            return []
+        
+        clean_text = ''.join(c.lower() for c in text if c.isalpha())
+        if not clean_text:
+            return []
+        
+        matches = []
+        
+        # Calculate scores for all rules
+        for rule in self.rules:
+            score = rule.calculate_match_score(text)
+            if score > 0:
+                # Boost score if has unique characters
+                if rule.unique_chars and any(c in rule.unique_chars for c in clean_text):
+                    score = 1.0  # Maximum score for unique chars
+                matches.append((rule, score))
+        
+        # Sort by score descending
+        matches.sort(key=lambda x: x[1], reverse=True)
+        
+        return [rule for rule, score in matches]
+
+
 class LanguageRule:
+    """Represents syllabification rules for a specific language and script"""
+    
     lang3: str
-    script: str
     vowels: set[str]
     consonants: set[str]
     sonorants: set[str]
@@ -16,7 +71,6 @@ class LanguageRule:
     
     def __init__(self, data: dict):
         self.lang3 = data['lang3']
-        self.script = data.get('script', '')
         self.vowels = set(data['vowels'])
         self.consonants = set(data['consonants'])
         self.sonorants = set(data['sonorants'])
