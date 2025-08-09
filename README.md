@@ -11,8 +11,8 @@ Multilingual library for accurate and deterministic hyphenation and syllable cou
 >>> s = Syllabreak("-")
 >>> s.syllabify("hello")
 'hel-lo'
->>> s.detect_language("hello")
-['en']
+>>> s.syllabify("здраво")  # Serbian Cyrillic
+'здра-во'
 ```
 
 ## Language Detection
