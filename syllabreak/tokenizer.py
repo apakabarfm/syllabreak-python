@@ -56,7 +56,15 @@ class Tokenizer:
             self.tokens[-1].end_idx = self.pos + 1
             self.tokens[-1].is_modifier = True
         else:
-            self.tokens.append(Token(self.word[self.pos], TokenClass.OTHER, False, True, self.pos, self.pos + 1))
+            self.tokens.append(
+                Token(
+                    surface=self.word[self.pos],
+                    token_class=TokenClass.OTHER,
+                    is_modifier=True,
+                    start_idx=self.pos,
+                    end_idx=self.pos + 1,
+                )
+            )
         self.pos += 1
         return True
 
@@ -66,7 +74,14 @@ class Tokenizer:
         if char not in self.rule.modifiers_separators:
             return False
 
-        self.tokens.append(Token(self.word[self.pos], TokenClass.SEPARATOR, False, False, self.pos, self.pos + 1))
+        self.tokens.append(
+            Token(
+                surface=self.word[self.pos],
+                token_class=TokenClass.SEPARATOR,
+                start_idx=self.pos,
+                end_idx=self.pos + 1,
+            )
+        )
         self.pos += 1
         return True
 
@@ -79,12 +94,10 @@ class Tokenizer:
             if substr in self.rule.dont_split_digraphs:
                 self.tokens.append(
                     Token(
-                        self.word[self.pos : self.pos + length],
-                        TokenClass.CONSONANT,
-                        False,
-                        False,
-                        self.pos,
-                        self.pos + length,
+                        surface=self.word[self.pos : self.pos + length],
+                        token_class=TokenClass.CONSONANT,
+                        start_idx=self.pos,
+                        end_idx=self.pos + length,
                     )
                 )
                 self.pos += length
@@ -100,12 +113,10 @@ class Tokenizer:
             if substr in self.rule.digraph_vowels:
                 self.tokens.append(
                     Token(
-                        self.word[self.pos : self.pos + length],
-                        TokenClass.VOWEL,
-                        False,
-                        False,
-                        self.pos,
-                        self.pos + length,
+                        surface=self.word[self.pos : self.pos + length],
+                        token_class=TokenClass.VOWEL,
+                        start_idx=self.pos,
+                        end_idx=self.pos + length,
                     )
                 )
                 self.pos += length
@@ -116,12 +127,32 @@ class Tokenizer:
         """Add a single character token at current position."""
         char = self.word_lower[self.pos]
         if char in self.rule.vowels:
-            self.tokens.append(Token(self.word[self.pos], TokenClass.VOWEL, False, False, self.pos, self.pos + 1))
+            self.tokens.append(
+                Token(
+                    surface=self.word[self.pos],
+                    token_class=TokenClass.VOWEL,
+                    start_idx=self.pos,
+                    end_idx=self.pos + 1,
+                )
+            )
         elif char in self.rule.consonants or char in self.rule.glides or char in self.rule.sonorants:
             is_glide = char in self.rule.glides
             self.tokens.append(
-                Token(self.word[self.pos], TokenClass.CONSONANT, is_glide, False, self.pos, self.pos + 1)
+                Token(
+                    surface=self.word[self.pos],
+                    token_class=TokenClass.CONSONANT,
+                    is_glide=is_glide,
+                    start_idx=self.pos,
+                    end_idx=self.pos + 1,
+                )
             )
         else:
-            self.tokens.append(Token(self.word[self.pos], TokenClass.OTHER, False, False, self.pos, self.pos + 1))
+            self.tokens.append(
+                Token(
+                    surface=self.word[self.pos],
+                    token_class=TokenClass.OTHER,
+                    start_idx=self.pos,
+                    end_idx=self.pos + 1,
+                )
+            )
         self.pos += 1
