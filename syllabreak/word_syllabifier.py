@@ -1,3 +1,5 @@
+from typing import Optional
+
 from .language_rule import LanguageRule
 from .tokenizer import Token, TokenClass, Tokenizer
 
@@ -88,7 +90,7 @@ class WordSyllabifier:
 
         return boundary_idx
 
-    def _find_boundary_in_cluster(self, cluster: list[Token], cluster_indices: list[int]) -> int | None:
+    def _find_boundary_in_cluster(self, cluster: list[Token], cluster_indices: list[int]) -> Optional[int]:
         """Determine where to place boundary in a consonant cluster."""
         if len(cluster) == 0:
             return None

@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Optional
 
 import yaml
 
@@ -22,7 +23,7 @@ class Syllabreak:
         matching_rules = self.meta_rule.find_matches(text)
         return [rule.lang for rule in matching_rules]
 
-    def _auto_detect_rule(self, text: str) -> LanguageRule | None:
+    def _auto_detect_rule(self, text: str) -> Optional[LanguageRule]:
         """Auto-detect the first matching language rule for the text."""
         matching_rules = self.meta_rule.find_matches(text)
         return matching_rules[0] if matching_rules else None
@@ -34,7 +35,7 @@ class Syllabreak:
                 return rule
         raise ValueError(f"Language '{lang}' is not supported")
 
-    def syllabify(self, text: str, lang: str | None = None) -> str:
+    def syllabify(self, text: str, lang: Optional[str] = None) -> str:
         """Syllabify text by inserting soft hyphens at syllable boundaries.
 
         Args:
