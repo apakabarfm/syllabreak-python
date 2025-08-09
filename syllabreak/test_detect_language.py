@@ -26,11 +26,9 @@ def test_detect_language(text, expected):
     result = s.detect_language(text)
 
     if expected:
-        # Check that we got results and the expected language is first
         assert result, f"Failed for '{text}': got empty result, expected {expected}"
         assert result[0] == expected[0], (
             f"Failed for '{text}': got {result[0]} as first (from {result}), expected {expected[0]}"
         )
     else:
-        # Expected no language
         assert result == [], f"Failed for '{text}': got {result}, expected empty list"
