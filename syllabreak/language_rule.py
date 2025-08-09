@@ -9,10 +9,10 @@ class MetaRule:
     def _calculate_unique_chars(self):
         """Calculate unique characters for each language rule"""
         for rule in self.rules:
-            rule.unique_chars = rule._all_chars.copy()
+            rule.unique_chars = rule.all_chars.copy()
             for other_rule in self.rules:
                 if other_rule.lang != rule.lang:
-                    rule.unique_chars -= other_rule._all_chars
+                    rule.unique_chars -= other_rule.all_chars
 
     def _link_rules_to_meta(self):
         """Link each rule back to this meta rule"""
@@ -23,7 +23,7 @@ class MetaRule:
         """Get all characters from all languages"""
         all_chars = set()
         for rule in self.rules:
-            all_chars |= rule._all_chars
+            all_chars |= rule.all_chars
         return all_chars
 
     def find_matches(self, text: str) -> list:
@@ -84,6 +84,10 @@ class LanguageRule:
         self.modifiers_separators = set(data.get("modifiers_separators", ""))
 
         self._all_chars = self.vowels | self.consonants
+
+    @property
+    def all_chars(self) -> set[str]:
+        return self._all_chars
 
     def is_vowel(self, char: str) -> bool:
         return char in self.vowels
