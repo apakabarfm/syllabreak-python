@@ -50,3 +50,16 @@ rules:
     modifiers_attach_left: ""
     modifiers_attach_right: ""
     modifiers_separators: ""
+
+  - lang3: "tur"
+    vowels: "aeıioöuü"
+    consonants: "bcçdfgğhjklmnprsştvyz"
+    sonorants: "lmnr"
+    clusters_keep_next: ["br", "bl", "kr", "kl", "pr", "pl", "tr", "dr", "fr", "fl", "gr", "gl"]  # rare in native words, mostly in loanwords
+    dont_split_digraphs: []  # Turkish orthography doesn’t use digraphs
+    digraph_vowels: []       # No vowel digraphs in Turkish
+    glides: "y"
+    syllabic_consonants: ""  # Turkish doesn’t have syllabic consonants
+    modifiers_attach_left: ""  # No diacritic markers as separate letters
+    modifiers_attach_right: ""
+    modifiers_separators: ""
