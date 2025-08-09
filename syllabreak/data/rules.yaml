@@ -1,0 +1,54 @@
+rules:
+  - lang3: "eng"
+    vowels: "aeiouy"
+    consonants: "bcdfghjklmnpqrstvwxyz"
+    sonorants: "lmnr"
+    clusters_keep_next: ["bl", "br", "cl", "cr", "dr", "fl", "fr", "gl", "gr", "pl", "pr", "sl", "sm", "sn", "sp", "st", "sw", "tr", "tw"]
+    dont_split_digraphs: ["ch", "sh", "th", "ph", "wh", "ck", "gh", "qu"]
+    digraph_vowels: ["ea", "ee", "oo", "ou", "ie", "ei", "ai", "ay", "oy", "oi", "ue"]
+    glides: "wy"
+    syllabic_consonants: "lmnr"
+    modifiers_attach_left: ""
+    modifiers_attach_right: ""
+    modifiers_separators: ""
+
+  - lang3: "rus"
+    vowels: "аеёиоуыэюя"
+    consonants: "бвгджзйклмнпрстфхцчшщ"
+    sonorants: "лмнрй"
+    clusters_keep_next: ["бл", "бр", "кл", "кр", "др", "тр", "пл", "пр", "сл", "см", "сн", "сп", "ст", "ск", "фл", "фр", "гр", "гл"]
+    dont_split_digraphs: []
+    digraph_vowels: ["ье", "ья", "ьё", "ьи"]
+    glides: "й"
+    syllabic_consonants: ""
+    modifiers_attach_left: "ь"
+    modifiers_attach_right: ""
+    modifiers_separators: "ъ"
+
+  - lang3: "srp"
+    script: "cyrl"
+    vowels: "аиуео"
+    consonants: "бвгдђжзјклљмнњпрстћфхцчџш"
+    sonorants: "лљмнњрј"
+    clusters_keep_next: ["бр", "кр", "др", "тр", "пр", "гр", "гл", "пл", "кл", "сп", "ст", "ск"]
+    dont_split_digraphs: []
+    digraph_vowels: []
+    glides: "ј"
+    syllabic_consonants: "р"
+    modifiers_attach_left: ""
+    modifiers_attach_right: ""
+    modifiers_separators: ""
+
+  - lang3: "srp"
+    script: "latn"
+    vowels: "aeiou"
+    consonants: "bcčćdžđfghjklmnprsštvzž"
+    sonorants: "lmnrj"
+    clusters_keep_next: ["br", "kr", "dr", "tr", "pr", "gr", "gl", "pl", "kl", "sp", "st", "sk"]
+    dont_split_digraphs: ["nj", "lj", "dž", "dj"]
+    digraph_vowels: []
+    glides: "j"
+    syllabic_consonants: "r"
+    modifiers_attach_left: ""
+    modifiers_attach_right: ""
+    modifiers_separators: ""
