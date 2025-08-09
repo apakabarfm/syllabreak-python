@@ -1,20 +1,22 @@
-import yaml
 from pathlib import Path
+
 import pytest
+import yaml
+
 from syllabreak import Syllabreak
 
 
 def load_test_cases():
-    test_file = Path(__file__).parent / 'data' / 'syllabify_tests.yaml'
-    with open(test_file, 'r', encoding='utf-8') as f:
+    test_file = Path(__file__).parent / "data" / "syllabify_tests.yaml"
+    with open(test_file, encoding="utf-8") as f:
         data = yaml.safe_load(f)
-    
+
     test_cases = []
-    for section in data['tests']:
-        section_name = section['section']
-        lang = section.get('lang')
-        for case in section['cases']:
-            test_cases.append((section_name, lang, case['text'], case['want']))
+    for section in data["tests"]:
+        section_name = section["section"]
+        lang = section.get("lang")
+        for case in section["cases"]:
+            test_cases.append((section_name, lang, case["text"], case["want"]))
     return test_cases
 
 

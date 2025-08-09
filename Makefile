@@ -4,3 +4,11 @@ install:
 
 test:
 	venv/bin/pytest syllabreak/
+
+lint:
+	venv/bin/ruff check syllabreak/
+	venv/bin/ruff format --check syllabreak/
+
+format:
+	venv/bin/ruff check --fix syllabreak/
+	venv/bin/ruff format syllabreak/
