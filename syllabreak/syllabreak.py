@@ -61,7 +61,6 @@ class Syllabreak:
         while i < len(text):
             # Find word boundaries
             if not text[i].isalpha():
-                # Non-letter character
                 result.append(text[i])
                 i += 1
                 continue
@@ -70,11 +69,8 @@ class Syllabreak:
             word_start = i
             while i < len(text) and text[i].isalpha():
                 i += 1
-            word = text[word_start:i]
 
-            # Syllabify word
-            syllabifier = WordSyllabifier(word, rule, self.soft_hyphen)
-            hyphenated = syllabifier.syllabify()
-            result.append(hyphenated)
+            word = text[word_start:i]
+            result.append(WordSyllabifier(word, rule, self.soft_hyphen).syllabify())
 
         return "".join(result)
