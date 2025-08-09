@@ -3,4 +3,4 @@ install:
 	venv/bin/pip install -r requirements.txt
 
 test:
-	PYTHONPATH=. venv/bin/pytest tests/
+	venv/bin/pytest syllabreak/

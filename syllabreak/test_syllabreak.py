@@ -5,7 +5,7 @@ from syllabreak import Syllabreak
 
 
 def load_test_cases():
-    test_file = Path(__file__).parent.parent / 'syllabreak' / 'data' / 'syllabify_tests.yaml'
+    test_file = Path(__file__).parent / 'data' / 'syllabify_tests.yaml'
     with open(test_file, 'r', encoding='utf-8') as f:
         data = yaml.safe_load(f)
     
