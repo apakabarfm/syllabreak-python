@@ -11,8 +11,8 @@ def load_test_cases():
     
     test_cases = []
     for group in data['tests']:
-        lang3 = group.get('lang3')
-        expected = [lang3] if lang3 else []
+        lang = group.get('lang')
+        expected = [lang] if lang else []
         for text in group['cases']:
             test_cases.append((text, expected))
     return test_cases

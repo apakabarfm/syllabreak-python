@@ -11,7 +11,7 @@ class MetaRule:
         for rule in self.rules:
             rule.unique_chars = rule._all_chars.copy()
             for other_rule in self.rules:
-                if other_rule.lang3 != rule.lang3:
+                if other_rule.lang != rule.lang:
                     rule.unique_chars -= other_rule._all_chars
     
     def _link_rules_to_meta(self):
@@ -55,7 +55,7 @@ class MetaRule:
 class LanguageRule:
     """Represents syllabification rules for a specific language and script"""
     
-    lang3: str
+    lang: str
     vowels: set[str]
     consonants: set[str]
     sonorants: set[str]
@@ -70,7 +70,7 @@ class LanguageRule:
     _all_chars: set[str]
     
     def __init__(self, data: dict):
-        self.lang3 = data['lang3']
+        self.lang = data['lang']
         self.vowels = set(data['vowels'])
         self.consonants = set(data['consonants'])
         self.sonorants = set(data['sonorants'])

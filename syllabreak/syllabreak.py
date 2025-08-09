@@ -1,8 +1,10 @@
-import yaml
 from pathlib import Path
-from .language_rule import LanguageRule, MetaRule
-from .tokenizer import Token, Tokenizer
 from typing import Optional
+
+import yaml
+
+from .language_rule import LanguageRule, MetaRule
+from .tokenizer import Token, Tokenizer, TokenClass
 
 
 class Syllabreak:
@@ -19,18 +21,12 @@ class Syllabreak:
     
     def detect_language(self, text: str) -> list[str]:
         matching_rules = self.meta_rule.find_matches(text)
-        return [rule.lang3 for rule in matching_rules]
+        return [rule.lang for rule in matching_rules]
     
-    def _select_language_rule(self, text: str) -> Optional[LanguageRule]:
-        """Select the first matching language rule for the text."""
-        text_lower = text.lower()
-        for rule in self.meta_rule.rules:
-            all_chars = (rule.vowels | rule.consonants | rule.glides | 
-                        rule.syllabic_consonants | rule.modifiers_attach_left | 
-                        rule.modifiers_separators)
-            if any(c in all_chars for c in text_lower):
-                return rule
-        return None
+    def _auto_detect_rule(self, text: str) -> Optional[LanguageRule]:
+        """Auto-detect the first matching language rule for the text."""
+        matching_rules = self.meta_rule.find_matches(text)
+        return matching_rules[0] if matching_rules else None
     
     def _tokenize_word(self, word: str, rule: LanguageRule) -> list[Token]:
         """Tokenize a word according to language rules."""
@@ -41,31 +37,20 @@ class Syllabreak:
         """Find syllable nuclei in the token list."""
         nuclei = []
         
+        # First pass: collect all vowel nuclei
         for i, token in enumerate(tokens):
-            if token.token_class == 'vowel':
+            if token.token_class == TokenClass.VOWEL:
                 nuclei.append(i)
-            elif (token.token_class == 'cons' and 
+        
+        # If we have any vowels, syllabic consonants are not used
+        if nuclei:
+            return nuclei
+        
+        # Second pass: only if NO vowels, use syllabic consonants
+        for i, token in enumerate(tokens):
+            if (token.token_class == TokenClass.CONSONANT and 
                   token.surface.lower() in rule.syllabic_consonants):
-                # Check if not adjacent to any vowel
-                has_adjacent_vowel = False
-                # Check left
-                for j in range(i - 1, -1, -1):
-                    if tokens[j].token_class == 'vowel':
-                        has_adjacent_vowel = True
-                        break
-                    if tokens[j].token_class != 'sep':
-                        break
-                # Check right
-                if not has_adjacent_vowel:
-                    for j in range(i + 1, len(tokens)):
-                        if tokens[j].token_class == 'vowel':
-                            has_adjacent_vowel = True
-                            break
-                        if tokens[j].token_class != 'sep':
-                            break
-                
-                if not has_adjacent_vowel:
-                    nuclei.append(i)
+                nuclei.append(i)
         
         return nuclei
     
@@ -79,19 +64,19 @@ class Syllabreak:
             
             # Find L (index after Nk, skipping sep)
             L = nk + 1
-            while L < len(tokens) and tokens[L].token_class == 'sep':
+            while L < len(tokens) and tokens[L].token_class == TokenClass.SEPARATOR:
                 L += 1
             
             # Find R (index before Nk+1, skipping sep)
             R = nk1 - 1
-            while R >= 0 and tokens[R].token_class == 'sep':
+            while R >= 0 and tokens[R].token_class == TokenClass.SEPARATOR:
                 R -= 1
             
             # Collect consonant cluster
             cluster = []
             cluster_indices = []
             for i in range(L, R + 1):
-                if tokens[i].token_class == 'cons':
+                if tokens[i].token_class == TokenClass.CONSONANT:
                     cluster.append(tokens[i])
                     cluster_indices.append(i)
             
@@ -148,15 +133,32 @@ class Syllabreak:
         
         return ''.join(result)
     
-    def syllabify(self, text: str) -> str:
-        """Syllabify text by inserting soft hyphens at syllable boundaries."""
+    def _get_rule_by_lang(self, lang: str) -> LanguageRule:
+        """Get language rule by language code."""
+        for rule in self.meta_rule.rules:
+            if rule.lang == lang:
+                return rule
+        raise ValueError(f"Language '{lang}' is not supported")
+    
+    def syllabify(self, text: str, lang: Optional[str] = None) -> str:
+        """Syllabify text by inserting soft hyphens at syllable boundaries.
+        
+        Args:
+            text: Text to syllabify
+            lang: Optional language code (e.g., 'eng', 'srp-latn'). If not provided, auto-detects.
+        
+        Raises:
+            ValueError: If specified language is not supported
+        """
         if not text:
             return text
         
-        # Select language rule
-        rule = self._select_language_rule(text)
-        if not rule:
-            return text
+        if lang:
+            rule = self._get_rule_by_lang(lang)
+        else:
+            rule = self._auto_detect_rule(text)
+            if not rule:
+                return text
         
         # Process each word
         result = []

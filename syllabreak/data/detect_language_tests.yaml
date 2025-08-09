@@ -1,5 +1,5 @@
 tests:
-  - lang3: "eng"
+  - lang: "eng"
     cases:
       - "hello"
       - "world"
@@ -15,7 +15,7 @@ tests:
       - "don't"
       - "lepo"
   
-  - lang3: "rus"
+  - lang: "rus"
     cases:
       - "привет"
       - "мир"
@@ -33,14 +33,14 @@ tests:
       - "рачунар"
       - "свет"
   
-  - lang3: "srp-cyrl"
+  - lang: "srp-cyrl"
     cases:
       - "ђак"
       - "њега"
       - "ЂАК"
       - "ЊЕГА"
   
-  - lang3: "srp-latn"
+  - lang: "srp-latn"
     cases:
       - "čovek"
       - "šuma"
@@ -50,7 +50,7 @@ tests:
       - "ČOVEK"
       - "ŠUMA"
   
-  - lang3: null
+  - lang: null
     cases:
       - "123456"
       - "!@#$%"

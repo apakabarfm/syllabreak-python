@@ -1,5 +1,6 @@
 tests:
   - section: "English"
+    lang: "eng"
     cases:
       - text: "hello"
         want: "hel-lo"
@@ -15,6 +16,7 @@ tests:
         want: "un-der-stand"
   
   - section: "Russian"
+    lang: "rus"
     cases:
       - text: "привет"
         want: "при-вет"
@@ -30,6 +32,7 @@ tests:
         want: "маль-чик"
   
   - section: "Serbian Cyrillic"
+    lang: "srp-cyrl"
     cases:
       - text: "здраво"
         want: "здра-во"
@@ -45,6 +48,7 @@ tests:
         want: "трг"
   
   - section: "Serbian Latin"
+    lang: "srp-latn"
     cases:
       - text: "zdravo"
         want: "zdra-vo"
@@ -58,6 +62,16 @@ tests:
         want: "šu-ma"
       - text: "njegov"
         want: "nje-gov"
+  
+  - section: "Serbian Latin (autodetect)"
+    lang: null
+    cases:
+      - text: "čovek"
+        want: "čo-vek"
+      - text: "šuma" 
+        want: "šu-ma"
+      - text: "učitelj"
+        want: "u-či-telj"
   
   - section: "Edge cases"
     cases:

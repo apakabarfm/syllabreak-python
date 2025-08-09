@@ -3,10 +3,10 @@ from syllabreak.tokenizer import Tokenizer, Token
 from syllabreak.language_rule import LanguageRule
 
 
-def create_test_rule(lang3="test", **overrides):
+def create_test_rule(lang="test", **overrides):
     """Create a test LanguageRule with defaults that can be overridden."""
     default_data = {
-        'lang3': lang3,
+        'lang': lang,
         'vowels': 'aeiou',
         'consonants': 'bcdfghjklmnpqrstvwxyz',
         'sonorants': 'lmnr',

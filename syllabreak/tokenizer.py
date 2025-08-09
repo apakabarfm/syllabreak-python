@@ -1,11 +1,19 @@
 from dataclasses import dataclass
+from enum import Enum
 from .language_rule import LanguageRule
+
+
+class TokenClass(Enum):
+    VOWEL = 'vowel'
+    CONSONANT = 'cons'
+    SEPARATOR = 'sep'
+    OTHER = 'other'
 
 
 @dataclass
 class Token:
     surface: str
-    token_class: str  # 'vowel', 'cons', 'sep', 'other'
+    token_class: TokenClass
     is_glide: bool = False
     is_modifier: bool = False
     start_idx: int = 0
@@ -47,7 +55,7 @@ class Tokenizer:
             self.tokens[-1].end_idx = self.pos + 1
             self.tokens[-1].is_modifier = True
         else:
-            self.tokens.append(Token(self.word[self.pos], 'other', False, True, self.pos, self.pos + 1))
+            self.tokens.append(Token(self.word[self.pos], TokenClass.OTHER, False, True, self.pos, self.pos + 1))
         self.pos += 1
         return True
     
@@ -57,7 +65,7 @@ class Tokenizer:
         if char not in self.rule.modifiers_separators:
             return False
         
-        self.tokens.append(Token(self.word[self.pos], 'sep', False, False, self.pos, self.pos + 1))
+        self.tokens.append(Token(self.word[self.pos], TokenClass.SEPARATOR, False, False, self.pos, self.pos + 1))
         self.pos += 1
         return True
     
@@ -68,7 +76,7 @@ class Tokenizer:
                 continue
             substr = self.word_lower[self.pos:self.pos+length]
             if substr in self.rule.dont_split_digraphs:
-                self.tokens.append(Token(self.word[self.pos:self.pos+length], 'cons', False, False, self.pos, self.pos + length))
+                self.tokens.append(Token(self.word[self.pos:self.pos+length], TokenClass.CONSONANT, False, False, self.pos, self.pos + length))
                 self.pos += length
                 return True
         return False
@@ -80,7 +88,7 @@ class Tokenizer:
                 continue
             substr = self.word_lower[self.pos:self.pos+length]
             if substr in self.rule.digraph_vowels:
-                self.tokens.append(Token(self.word[self.pos:self.pos+length], 'vowel', False, False, self.pos, self.pos + length))
+                self.tokens.append(Token(self.word[self.pos:self.pos+length], TokenClass.VOWEL, False, False, self.pos, self.pos + length))
                 self.pos += length
                 return True
         return False
@@ -89,10 +97,11 @@ class Tokenizer:
         """Add a single character token at current position."""
         char = self.word_lower[self.pos]
         if char in self.rule.vowels:
-            self.tokens.append(Token(self.word[self.pos], 'vowel', False, False, self.pos, self.pos + 1))
+            self.tokens.append(Token(self.word[self.pos], TokenClass.VOWEL, False, False, self.pos, self.pos + 1))
         elif char in self.rule.consonants or char in self.rule.glides or char in self.rule.sonorants:
             is_glide = char in self.rule.glides
-            self.tokens.append(Token(self.word[self.pos], 'cons', is_glide, False, self.pos, self.pos + 1))
+            self.tokens.append(Token(self.word[self.pos], TokenClass.CONSONANT, is_glide, False, self.pos, self.pos + 1))
         else:
-            self.tokens.append(Token(self.word[self.pos], 'other', False, False, self.pos, self.pos + 1))
+            self.tokens.append(Token(self.word[self.pos], TokenClass.OTHER, False, False, self.pos, self.pos + 1))
         self.pos += 1
+        

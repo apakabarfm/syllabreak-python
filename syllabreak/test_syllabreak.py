@@ -12,13 +12,17 @@ def load_test_cases():
     test_cases = []
     for section in data['tests']:
         section_name = section['section']
+        lang = section.get('lang')
         for case in section['cases']:
-            test_cases.append((section_name, case['text'], case['want']))
+            test_cases.append((section_name, lang, case['text'], case['want']))
     return test_cases
 
 
-@pytest.mark.parametrize("section,text,want", load_test_cases())
-def test_syllabify(section, text, want):
+@pytest.mark.parametrize("section,lang,text,want", load_test_cases())
+def test_syllabify(section, lang, text, want):
     syllabifier = Syllabreak("-")  # Use regular hyphen for tests
-    result = syllabifier.syllabify(text)
+    if lang:
+        result = syllabifier.syllabify(text, lang=lang)
+    else:
+        result = syllabifier.syllabify(text)
     assert result == want, f"[{section}] Failed for '{text}': got '{result}', want '{want}'"

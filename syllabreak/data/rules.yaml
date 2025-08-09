@@ -1,5 +1,5 @@
 rules:
-  - lang3: "eng"
+  - lang: "eng"
     vowels: "aeiouy"
     consonants: "bcdfghjklmnpqrstvwxyz"
     sonorants: "lmnr"
@@ -12,7 +12,7 @@ rules:
     modifiers_attach_right: ""
     modifiers_separators: ""
 
-  - lang3: "rus"
+  - lang: "rus"
     vowels: "аеёиоуыэюя"
     consonants: "бвгджзйклмнпрстфхцчшщ"
     sonorants: "лмнрй"
@@ -25,7 +25,7 @@ rules:
     modifiers_attach_right: ""
     modifiers_separators: "ъ"
 
-  - lang3: "srp-cyrl"
+  - lang: "srp-cyrl"
     vowels: "аиуео"
     consonants: "бвгдђжзјклљмнњпрстћфхцчџш"
     sonorants: "лљмнњрј"
@@ -38,7 +38,7 @@ rules:
     modifiers_attach_right: ""
     modifiers_separators: ""
 
-  - lang3: "srp-latn"
+  - lang: "srp-latn"
     vowels: "aeiou"
     consonants: "bcčćdžđfghjklmnprsštvzž"
     sonorants: "lmnrj"
