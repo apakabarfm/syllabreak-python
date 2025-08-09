@@ -19,6 +19,6 @@ def load_test_cases():
 
 @pytest.mark.parametrize("section,text,want", load_test_cases())
 def test_syllabify(section, text, want):
-    syllabifier = Syllabreak()
+    syllabifier = Syllabreak("-")  # Use regular hyphen for tests
     result = syllabifier.syllabify(text)
     assert result == want, f"[{section}] Failed for '{text}': got '{result}', want '{want}'"
