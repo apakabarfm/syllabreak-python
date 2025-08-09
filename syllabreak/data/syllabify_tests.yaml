@@ -1,0 +1,14 @@
+tests:
+  - section: "Simple words"
+    cases:
+      - text: "кот"
+        want: "кот"
+      - text: "трг"
+        want: "трг"
+      - text: "a"
+        want: "a"
+  
+  - section: "Non-words"
+    cases:
+      - text: "123"
+        want: "123"
