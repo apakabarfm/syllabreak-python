@@ -7,8 +7,8 @@ setup(
     install_requires=[
         "PyYAML>=6.0",
     ],
-    python_requires=">=3.8",
-    author="Apakabar FM",
+    python_requires=">=3.9",
+    author="Apakabar.fm team",
     description="A library for syllable breaking and language detection",
     package_data={
         "syllabreak": ["data/*.yaml"],
