@@ -20,81 +20,84 @@ class WordSyllabifier:
     def _find_nuclei(self) -> list[int]:
         """Find syllable nuclei in the token list."""
         nuclei = []
-
-        # First pass: collect all vowel nuclei
         for i, token in enumerate(self.tokens):
             if token.token_class == TokenClass.VOWEL:
                 nuclei.append(i)
 
-        # If we have any vowels, syllabic consonants are not used
         if nuclei:
             return nuclei
 
-        # Second pass: only if NO vowels, use syllabic consonants
         for i, token in enumerate(self.tokens):
             if token.token_class == TokenClass.CONSONANT and token.surface.lower() in self.rule.syllabic_consonants:
                 nuclei.append(i)
 
         return nuclei
 
-    def _find_cluster_between_nuclei(self, nk: int, nk1: int) -> tuple[list[Token], list[int]]:
-        """Find consonant cluster between two nuclei, skipping separators."""
-        # Find L (index after Nk, skipping sep)
-        L = nk + 1
-        while L < len(self.tokens) and self.tokens[L].token_class == TokenClass.SEPARATOR:
-            L += 1
+    def _skip_separators_forward(self, start: int) -> int:
+        """Skip separator tokens forward from start position."""
+        pos = start
+        while pos < len(self.tokens) and self.tokens[pos].token_class == TokenClass.SEPARATOR:
+            pos += 1
+        return pos
 
-        # Find R (index before Nk+1, skipping sep)
-        R = nk1 - 1
-        while R >= 0 and self.tokens[R].token_class == TokenClass.SEPARATOR:
-            R -= 1
+    def _skip_separators_backward(self, start: int) -> int:
+        """Skip separator tokens backward from start position."""
+        pos = start
+        while pos >= 0 and self.tokens[pos].token_class == TokenClass.SEPARATOR:
+            pos -= 1
+        return pos
 
-        # Collect consonant cluster
+    def _extract_consonant_cluster(self, left: int, right: int) -> tuple[list[Token], list[int]]:
+        """Extract consonants between left and right indices."""
         cluster = []
         cluster_indices = []
-        for i in range(L, R + 1):
+        for i in range(left, right + 1):
             if self.tokens[i].token_class == TokenClass.CONSONANT:
                 cluster.append(self.tokens[i])
                 cluster_indices.append(i)
-
         return cluster, cluster_indices
+
+    def _find_cluster_between_nuclei(self, nk: int, nk1: int) -> tuple[list[Token], list[int]]:
+        """Find consonant cluster between two nuclei."""
+        left = self._skip_separators_forward(nk + 1)
+        right = self._skip_separators_backward(nk1 - 1)
+        return self._extract_consonant_cluster(left, right)
+
+    def _is_valid_onset(self, consonant1: str, consonant2: str) -> bool:
+        """Check if two consonants form a valid onset cluster."""
+        onset_candidate = consonant1.lower() + consonant2.lower()
+        return onset_candidate in self.rule.clusters_keep_next
+
+    def _find_boundary_for_single_consonant(self, cluster_indices: list[int]) -> int:
+        """V-CV: boundary before single consonant."""
+        return cluster_indices[0]
+
+    def _find_boundary_for_two_consonants(self, cluster: list[Token], cluster_indices: list[int]) -> int:
+        """Determine boundary for two-consonant cluster."""
+        if self._is_valid_onset(cluster[0].surface, cluster[1].surface):
+            return cluster_indices[0]
+        else:
+            return cluster_indices[1]
+
+    def _find_boundary_for_long_cluster(self, cluster: list[Token], cluster_indices: list[int]) -> int:
+        """Determine boundary for cluster with 3+ consonants."""
+        boundary_idx = cluster_indices[-1]
+        
+        if len(cluster) >= 2 and self._is_valid_onset(cluster[-2].surface, cluster[-1].surface):
+            boundary_idx = cluster_indices[-2]
+        
+        return boundary_idx
 
     def _find_boundary_in_cluster(self, cluster: list[Token], cluster_indices: list[int]) -> int | None:
         """Determine where to place boundary in a consonant cluster."""
         if len(cluster) == 0:
-            # No boundary needed between vowels
             return None
         elif len(cluster) == 1:
-            # V-CV: boundary before single consonant
-            return cluster_indices[0]
+            return self._find_boundary_for_single_consonant(cluster_indices)
         elif len(cluster) == 2:
-            # Check if cluster should be kept together
-            c1_surface = cluster[0].surface.lower()
-            c2_surface = cluster[1].surface.lower()
-            onset_candidate = c1_surface + c2_surface
-
-            if onset_candidate in self.rule.clusters_keep_next:
-                # V-CCV: boundary before first consonant
-                return cluster_indices[0]
-            else:
-                # VC-CV: boundary between consonants
-                return cluster_indices[1]
-        else:  # len(cluster) >= 3
-            # Try to find the longest valid onset from the right
-            # Default: leave one consonant for the onset
-            boundary_idx = cluster_indices[-1]
-
-            # Check if last two consonants form valid onset
-            if len(cluster) >= 2:
-                c1_surface = cluster[-2].surface.lower()
-                c2_surface = cluster[-1].surface.lower()
-                onset_candidate = c1_surface + c2_surface
-
-                if onset_candidate in self.rule.clusters_keep_next:
-                    # Can take two consonants for onset
-                    boundary_idx = cluster_indices[-2]
-
-            return boundary_idx
+            return self._find_boundary_for_two_consonants(cluster, cluster_indices)
+        else:
+            return self._find_boundary_for_long_cluster(cluster, cluster_indices)
 
     def _place_boundaries(self) -> list[int]:
         """Determine syllable boundaries between nuclei."""
@@ -110,7 +113,6 @@ class WordSyllabifier:
 
     def syllabify(self) -> str:
         """Perform syllabification and return the word with soft hyphens."""
-        # If less than 2 nuclei, no hyphenation needed
         if len(self.nuclei) < 2:
             return self.word
 
@@ -127,4 +129,3 @@ class WordSyllabifier:
             result.append(token.surface)
 
         return "".join(result)
-
