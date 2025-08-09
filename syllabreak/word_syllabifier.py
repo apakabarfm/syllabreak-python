@@ -82,10 +82,10 @@ class WordSyllabifier:
     def _find_boundary_for_long_cluster(self, cluster: list[Token], cluster_indices: list[int]) -> int:
         """Determine boundary for cluster with 3+ consonants."""
         boundary_idx = cluster_indices[-1]
-        
+
         if len(cluster) >= 2 and self._is_valid_onset(cluster[-2].surface, cluster[-1].surface):
             boundary_idx = cluster_indices[-2]
-        
+
         return boundary_idx
 
     def _find_boundary_in_cluster(self, cluster: list[Token], cluster_indices: list[int]) -> int | None:
