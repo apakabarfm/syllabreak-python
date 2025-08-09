@@ -71,3 +71,12 @@ tests:
         want: "123"
       - text: "!@#"
         want: "!@#"
+
+  - section: "Turkish"
+    cases:
+      - text: "kedi"
+        want: "ke-di"
+      - text: "evleri"
+        want: "ev-le-ri"
+      - text: "bulduk"
+        want: "bul-duk"
