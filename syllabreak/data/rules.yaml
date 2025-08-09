@@ -51,7 +51,7 @@ rules:
     modifiers_attach_right: ""
     modifiers_separators: ""
 
-  - lang3: "tur"
+  - lang: "tur"
     vowels: "aeıioöuü"
     consonants: "bcçdfgğhjklmnprsştvyz"
     sonorants: "lmnr"
