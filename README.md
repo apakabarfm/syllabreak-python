@@ -50,3 +50,11 @@ The library returns all matching languages sorted by confidence:
 >>> s.detect_language("čovek")
 ['srp-latn', 'eng', 'tur']  # Serbian Latin has highest confidence due to č
 ```
+
+## Lines of Code
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/loc-graph-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset=".github/loc-graph-light.svg">
+  <img alt="Lines of Code graph" src=".github/loc-graph-light.svg">
+</picture>

@@ -1,24 +1,20 @@
-name: LOC Graph
+name: LOC graph
 
 on:
+  schedule:
+    - cron: '0 0 * * *'  # Daily at midnight
+  workflow_dispatch:
   push:
     branches: [ main ]
-  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
-  loc:
+  build-loc-graph:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          
-      - name: Generate LOC Graph
-        uses: botforge-pro/loc-graph-action@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: loc-data
-          output_dir: .loc
-          title: "Lines of Code"
+      - uses: botforge-pro/loc-graph-action@main
