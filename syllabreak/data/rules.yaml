@@ -64,6 +64,23 @@ rules:
     modifiers_attach_right: ""
     modifiers_separators: ""
 
+  - lang: "deu"
+    vowels: "aeiouyäöü"
+    consonants: "bcdfghjklmnpqrstvwxzß"
+    sonorants: "lmnr"
+    # Allowable onset clusters; st stays here, gating is done by 'short nucleus' rule
+    clusters_keep_next: ["sp","st","sch","tr","dr","kr","gr","pr","br","fr","fl","kl","gl","pl","bl","sn","sm","sw","sk","spr","str","skr"]
+    dont_split_digraphs: ["sch","ch","qu","ph","th"]
+    # Treat these as single (long) nuclei: diphthongs + double vowels + vowel+h lengthening
+    digraph_vowels: ["ie","ei","ai","au","eu","äu","aa","ee","oo","ah","eh","ih","oh","uh","äh","öh","üh"]
+    glides: "wj"         # 'y' is a vowel in German loanwords
+    syllabic_consonants: ""
+    modifiers_attach_left: ""
+    modifiers_attach_right: ""
+    modifiers_separators: ""
+    # Clusters that should only be kept after long vowels (split after short vowels)
+    clusters_only_after_long: ["st"]
+
   - lang: "kat"
     vowels: "აეიოუ"
     consonants: "ბგდვზთკლმნპრსტფქღყშჩცძწჟხჯჰ"

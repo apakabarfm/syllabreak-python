@@ -67,6 +67,7 @@ class LanguageRule:
     modifiers_attach_left: set[str]
     modifiers_attach_right: set[str]
     modifiers_separators: set[str]
+    clusters_only_after_long: set[str]
     _all_chars: set[str]
 
     def __init__(self, data: dict):
@@ -82,6 +83,7 @@ class LanguageRule:
         self.modifiers_attach_left = set(data.get("modifiers_attach_left", ""))
         self.modifiers_attach_right = set(data.get("modifiers_attach_right", ""))
         self.modifiers_separators = set(data.get("modifiers_separators", ""))
+        self.clusters_only_after_long = set(data.get("clusters_only_after_long", []))
 
         self._all_chars = self.vowels | self.consonants
 

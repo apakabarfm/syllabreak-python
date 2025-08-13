@@ -65,27 +65,57 @@ class WordSyllabifier:
         right = self._skip_separators_backward(nk1 - 1)
         return self._extract_consonant_cluster(left, right)
 
-    def _is_valid_onset(self, consonant1: str, consonant2: str) -> bool:
+    def _is_valid_onset(self, consonant1: str, consonant2: str, prev_nucleus_idx: Optional[int] = None) -> bool:
         """Check if two consonants form a valid onset cluster."""
         onset_candidate = consonant1.lower() + consonant2.lower()
+        
+        # Check if this cluster requires a long vowel before it
+        if onset_candidate in self.rule.clusters_only_after_long and prev_nucleus_idx is not None:
+            # Check if previous nucleus is long (digraph or marked as long)
+            if not self._is_long_nucleus(prev_nucleus_idx):
+                return False
+        
         return onset_candidate in self.rule.clusters_keep_next
+    
+    def _is_long_nucleus(self, nucleus_idx: int) -> bool:
+        """Check if nucleus at given index is long (digraph vowel or followed by lengthening marker)."""
+        if nucleus_idx >= len(self.tokens):
+            return False
+            
+        # Get the vowel token
+        vowel_token = self.tokens[nucleus_idx]
+        
+        # Check if this vowel token itself is already a digraph (tokenized as one unit)
+        if vowel_token.surface.lower() in self.rule.digraph_vowels:
+            return True
+            
+        # Check if current vowel + next character forms a digraph vowel
+        if nucleus_idx + 1 < len(self.tokens):
+            next_token = self.tokens[nucleus_idx + 1]
+            # Build potential digraph from current vowel and next token
+            digraph = vowel_token.surface.lower() + next_token.surface.lower()
+            if digraph in self.rule.digraph_vowels:
+                return True
+        
+        # Single vowel is considered short
+        return False
 
     def _find_boundary_for_single_consonant(self, cluster_indices: list[int]) -> int:
         """V-CV: boundary before single consonant."""
         return cluster_indices[0]
 
-    def _find_boundary_for_two_consonants(self, cluster: list[Token], cluster_indices: list[int]) -> int:
+    def _find_boundary_for_two_consonants(self, cluster: list[Token], cluster_indices: list[int], prev_nucleus_idx: Optional[int] = None) -> int:
         """Determine boundary for two-consonant cluster."""
-        if self._is_valid_onset(cluster[0].surface, cluster[1].surface):
+        if self._is_valid_onset(cluster[0].surface, cluster[1].surface, prev_nucleus_idx):
             return cluster_indices[0]
         else:
             return cluster_indices[1]
 
-    def _find_boundary_for_long_cluster(self, cluster: list[Token], cluster_indices: list[int]) -> int:
+    def _find_boundary_for_long_cluster(self, cluster: list[Token], cluster_indices: list[int], prev_nucleus_idx: Optional[int] = None) -> int:
         """Determine boundary for cluster with 3+ consonants."""
         boundary_idx = cluster_indices[-1]
 
-        if len(cluster) >= 2 and self._is_valid_onset(cluster[-2].surface, cluster[-1].surface):
+        if len(cluster) >= 2 and self._is_valid_onset(cluster[-2].surface, cluster[-1].surface, prev_nucleus_idx):
             boundary_idx = cluster_indices[-2]
 
         return boundary_idx
@@ -113,9 +143,9 @@ class WordSyllabifier:
         elif len(cluster) == 1:
             return self._find_boundary_for_single_consonant(cluster_indices)
         elif len(cluster) == 2:
-            return self._find_boundary_for_two_consonants(cluster, cluster_indices)
+            return self._find_boundary_for_two_consonants(cluster, cluster_indices, nk)
         else:
-            return self._find_boundary_for_long_cluster(cluster, cluster_indices)
+            return self._find_boundary_for_long_cluster(cluster, cluster_indices, nk)
 
     def _place_boundaries(self) -> list[int]:
         """Determine syllable boundaries between nuclei."""
