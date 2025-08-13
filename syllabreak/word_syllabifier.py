@@ -90,9 +90,25 @@ class WordSyllabifier:
 
         return boundary_idx
 
-    def _find_boundary_in_cluster(self, cluster: list[Token], cluster_indices: list[int]) -> Optional[int]:
-        """Determine where to place boundary in a consonant cluster."""
+    def _find_boundary_in_cluster(self, cluster: list[Token], cluster_indices: list[int], nk: int, nk1: int) -> Optional[int]:
+        """Determine where to place boundary in a consonant cluster or between vowels."""
         if len(cluster) == 0:
+            # Check for vowel hiatus (adjacent vowels)
+            # If no glides defined and no digraph_vowels, split between vowels
+            if not self.rule.glides and not self.rule.digraph_vowels:
+                # Check if nuclei are adjacent (or only separated by modifiers/separators)
+                if nk1 - nk == 1:
+                    # Adjacent vowels - place boundary between them
+                    return nk1
+                # Check if there are only separators between vowels
+                all_separators = True
+                for i in range(nk + 1, nk1):
+                    if self.tokens[i].token_class != TokenClass.SEPARATOR:
+                        all_separators = False
+                        break
+                if all_separators:
+                    # Only separators between vowels - place boundary before second vowel
+                    return nk1
             return None
         elif len(cluster) == 1:
             return self._find_boundary_for_single_consonant(cluster_indices)
@@ -107,7 +123,7 @@ class WordSyllabifier:
 
         for k in range(len(self.nuclei) - 1):
             cluster, cluster_indices = self._find_cluster_between_nuclei(self.nuclei[k], self.nuclei[k + 1])
-            boundary = self._find_boundary_in_cluster(cluster, cluster_indices)
+            boundary = self._find_boundary_in_cluster(cluster, cluster_indices, self.nuclei[k], self.nuclei[k + 1])
             if boundary is not None:
                 boundaries.append(boundary)
 

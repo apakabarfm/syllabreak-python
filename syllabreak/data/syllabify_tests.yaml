@@ -94,3 +94,17 @@ tests:
         want: "ev-le-ri"
       - text: "bulduk"
         want: "bul-duk"
+
+  - section: "Georgian"
+    lang: "kat"
+    cases:
+      - text: "გამარჯობა"
+        want: "გა-მარ-ჯო-ბა"
+      - text: "ქალაქი"
+        want: "ქა-ლა-ქი"
+      - text: "საქართველო"
+        want: "სა-ქარ-თვე-ლო"
+      - text: "მშვენიერი"
+        want: "მშვე-ნი-ე-რი"
+      - text: "თბილისი"
+        want: "თბი-ლი-სი"

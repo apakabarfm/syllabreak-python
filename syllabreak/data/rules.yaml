@@ -56,10 +56,26 @@ rules:
     consonants: "bcçdfgğhjklmnprsştvyz"
     sonorants: "lmnr"
     clusters_keep_next: ["br", "bl", "kr", "kl", "pr", "pl", "tr", "dr", "fr", "fl", "gr", "gl"]  # rare in native words, mostly in loanwords
-    dont_split_digraphs: []  # Turkish orthography doesn’t use digraphs
+    dont_split_digraphs: []  # Turkish orthography doesn't use digraphs
     digraph_vowels: []       # No vowel digraphs in Turkish
     glides: "y"
-    syllabic_consonants: ""  # Turkish doesn’t have syllabic consonants
+    syllabic_consonants: ""  # Turkish doesn't have syllabic consonants
     modifiers_attach_left: ""  # No diacritic markers as separate letters
+    modifiers_attach_right: ""
+    modifiers_separators: ""
+
+  - lang: "kat"
+    vowels: "აეიოუ"
+    consonants: "ბგდვზთკლმნპრსტფქღყშჩცძწჟხჯჰ"
+    sonorants: "ლმნრ"
+    # Allow only these onset clusters (whitelist). Anything else -> split V.CV
+    clusters_keep_next:
+      ["ბრ","ბლ","გრ","გლ","დრ","პრ","პლ","ტრ","კრ","კლ","ფრ","ფლ",
+       "კვ","გვ","ტვ","თვ","შვ","ჭვ","ჩვ","ცვ","წვ","ხვ"]
+    dont_split_digraphs: []   # No digraphs in modern Georgian
+    digraph_vowels: []        # No vowel digraphs: split any V+V (hiatus)
+    glides: ""                # No glides: force split for sequences like იე -> ი-ე
+    syllabic_consonants: ""   # No syllabic consonants
+    modifiers_attach_left: ""
     modifiers_attach_right: ""
     modifiers_separators: ""
