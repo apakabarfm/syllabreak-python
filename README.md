@@ -4,6 +4,16 @@
 
 Multilingual library for accurate and deterministic hyphenation and syllable counting without relying on dictionaries.
 
+## Supported Languages
+
+- 🇬🇧 English (`eng`)
+- 🇷🇺 Russian (`rus`)
+- 🇷🇸 Serbian Cyrillic (`srp-cyrl`)
+- 🇷🇸 Serbian Latin (`srp-latn`)
+- 🇹🇷 Turkish (`tur`)
+- 🇬🇪 Georgian (`kat`)
+- 🇩🇪 German (`deu`)
+
 ## Usage
 
 ### Auto-detect language
