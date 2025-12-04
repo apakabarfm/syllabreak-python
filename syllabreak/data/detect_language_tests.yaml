@@ -75,6 +75,14 @@ tests:
       - "être"
       - "père"
 
+  - lang: "ron"
+    cases:
+      - "română"
+      - "mulțumesc"
+      - "înțeleg"
+      - "seară"
+      - "țară"
+
   - lang: "spa"
     cases:
       - "español"

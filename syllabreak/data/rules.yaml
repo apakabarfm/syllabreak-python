@@ -94,6 +94,19 @@ rules:
     modifiers_attach_right: ""
     modifiers_separators: ""
 
+  - lang: "ron"
+    vowels: "aeiouăâî"
+    consonants: "bcdfghjklmnprsștțvwxz"
+    sonorants: "lmnr"
+    clusters_keep_next: ["bl", "br", "cl", "cr", "dr", "fl", "fr", "gl", "gr", "pl", "pr", "tr", "vr", "șt", "st", "sp", "sc"]
+    dont_split_digraphs: ["ch", "gh"]
+    digraph_vowels: ["ea", "oa", "ia", "ie", "io", "iu", "ua", "ue", "ui"]
+    glides: "iu"
+    syllabic_consonants: ""
+    modifiers_attach_left: ""
+    modifiers_attach_right: ""
+    modifiers_separators: ""
+
   - lang: "spa"
     vowels: "aeiouáéíóúü"
     consonants: "bcdfghjklmnñpqrstvwxyz"
