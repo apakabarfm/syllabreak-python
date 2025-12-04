@@ -75,6 +75,14 @@ tests:
       - "être"
       - "père"
 
+  - lang: "pol"
+    cases:
+      - "cześć"
+      - "książka"
+      - "dziękuję"
+      - "żółty"
+      - "święto"
+
   - lang: "lat"
     cases:
       - "āquā"

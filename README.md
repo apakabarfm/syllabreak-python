@@ -14,6 +14,7 @@ Multilingual library for accurate and deterministic hyphenation and syllable cou
 - 🇬🇪 Georgian (`kat`)
 - 🇩🇪 German (`deu`)
 - 🇫🇷 French (`fra`)
+- 🇵🇱 Polish (`pol`)
 - 🏛️ Latin (`lat`)
 
 ## Usage
