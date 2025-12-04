@@ -81,6 +81,34 @@ rules:
     # Clusters that should only be kept after long vowels (split after short vowels)
     clusters_only_after_long: ["st"]
 
+  - lang: "fra"
+    vowels: "aeiouyàâäéèêëïîôùûüœæ"
+    consonants: "bcdfghjklmnpqrstvwxzç"
+    sonorants: "lmnr"
+    clusters_keep_next: ["bl", "br", "cl", "cr", "dr", "fl", "fr", "gl", "gr", "pl", "pr", "tr", "vr", "ch", "ph", "th"]
+    dont_split_digraphs: ["ch", "ph", "gn", "th", "qu"]
+    digraph_vowels: ["ai", "ei", "au", "eau", "eu", "œu", "ou", "oi", "ui"]
+    glides: "wy"
+    syllabic_consonants: ""
+    modifiers_attach_left: ""
+    modifiers_attach_right: ""
+    modifiers_separators: ""
+
+  - lang: "lat"
+    vowels: "aeiouyāēīōūȳăĕĭŏŭ"
+    consonants: "bcdfghjklmnpqrstvxz"
+    sonorants: "lmnr"
+    # muta cum liquida clusters only (stop + l/r)
+    clusters_keep_next: ["bl", "br", "cl", "cr", "dr", "fl", "fr", "gl", "gr", "pl", "pr", "tr", "qu"]
+    dont_split_digraphs: ["ch", "ph", "th", "rh", "qu"]
+    digraph_vowels: ["ae", "oe", "au", "eu"]
+    glides: ""
+    syllabic_consonants: ""
+    modifiers_attach_left: ""
+    modifiers_attach_right: ""
+    modifiers_separators: ""
+    split_hiatus: true
+
   - lang: "kat"
     vowels: "აეიოუ"
     consonants: "ბგდვზთკლმნპრსტფქღყშჩცძწჟხჯჰ"
@@ -96,3 +124,4 @@ rules:
     modifiers_attach_left: ""
     modifiers_attach_right: ""
     modifiers_separators: ""
+    split_hiatus: true

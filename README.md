@@ -13,6 +13,8 @@ Multilingual library for accurate and deterministic hyphenation and syllable cou
 - 🇹🇷 Turkish (`tur`)
 - 🇬🇪 Georgian (`kat`)
 - 🇩🇪 German (`deu`)
+- 🇫🇷 French (`fra`)
+- 🏛️ Latin (`lat`)
 
 ## Usage
 

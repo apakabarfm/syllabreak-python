@@ -123,22 +123,28 @@ class WordSyllabifier:
     def _find_boundary_in_cluster(self, cluster: list[Token], cluster_indices: list[int], nk: int, nk1: int) -> Optional[int]:
         """Determine where to place boundary in a consonant cluster or between vowels."""
         if len(cluster) == 0:
-            # Check for vowel hiatus (adjacent vowels)
-            # If no glides defined and no digraph_vowels, split between vowels
-            if not self.rule.glides and not self.rule.digraph_vowels:
-                # Check if nuclei are adjacent (or only separated by modifiers/separators)
-                if nk1 - nk == 1:
-                    # Adjacent vowels - place boundary between them
-                    return nk1
+            # Check for vowel hiatus (adjacent vowels that form separate syllables)
+            if not self.rule.split_hiatus:
+                return None
+
+            # Check if nuclei are adjacent (or only separated by modifiers/separators)
+            are_adjacent = nk1 - nk == 1
+            if not are_adjacent:
                 # Check if there are only separators between vowels
                 all_separators = True
                 for i in range(nk + 1, nk1):
                     if self.tokens[i].token_class != TokenClass.SEPARATOR:
                         all_separators = False
                         break
-                if all_separators:
-                    # Only separators between vowels - place boundary before second vowel
-                    return nk1
+                are_adjacent = all_separators
+
+            if are_adjacent:
+                # Check if these two vowels form a digraph (don't split)
+                vowel_pair = self.tokens[nk].surface.lower() + self.tokens[nk1].surface.lower()
+                if vowel_pair in self.rule.digraph_vowels:
+                    return None
+                # Hiatus: split between vowels
+                return nk1
             return None
         elif len(cluster) == 1:
             return self._find_boundary_for_single_consonant(cluster_indices)
