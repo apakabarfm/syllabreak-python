@@ -98,14 +98,21 @@ rules:
     vowels: "aeiouăâî"
     consonants: "bcdfghjklmnprsștțvwxz"
     sonorants: "lmnr"
-    clusters_keep_next: ["bl", "br", "cl", "cr", "dr", "fl", "fr", "gl", "gr", "pl", "pr", "tr", "vr", "șt", "st", "sp", "sc"]
+    # Only C + l/r clusters stay together (DOOM orthographic norm)
+    # sp, st, sc, șt split between vowels (e.g., răs-puns, dra-gos-te)
+    clusters_keep_next: ["bl", "br", "cl", "cr", "dr", "fl", "fr", "gl", "gr", "pl", "pr", "tr", "vr"]
     dont_split_digraphs: ["ch", "gh"]
-    digraph_vowels: ["ea", "oa", "ia", "ie", "io", "iu", "ua", "ue", "ui"]
-    glides: "iu"
+    # ea, oa are true diphthongs (falling); ia, iu are rising diphthongs
+    digraph_vowels: ["ea", "oa", "ia", "iu"]
+    glides: ""
     syllabic_consonants: ""
     modifiers_attach_left: ""
     modifiers_attach_right: ""
     modifiers_separators: ""
+    # Split adjacent vowels that are not diphthongs (e.g., pri-e-teni)
+    split_hiatus: true
+    # Final -i after consonant is a semivowel (palatalization), not a separate syllable
+    final_semivowels: "i"
 
   - lang: "spa"
     vowels: "aeiouáéíóúü"

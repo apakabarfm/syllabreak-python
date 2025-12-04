@@ -26,6 +26,24 @@ class WordSyllabifier:
             if token.token_class == TokenClass.VOWEL:
                 nuclei.append(i)
 
+        # Check for final semivowels (e.g., Romanian final -i after consonant)
+        # These don't form a separate syllable nucleus
+        if nuclei and self.rule.final_semivowels:
+            last_nucleus_idx = nuclei[-1]
+            last_token = self.tokens[last_nucleus_idx]
+            # Check if it's the last token (or only followed by non-letters)
+            is_final = all(
+                self.tokens[j].token_class in (TokenClass.SEPARATOR, TokenClass.OTHER)
+                for j in range(last_nucleus_idx + 1, len(self.tokens))
+            )
+            if is_final and last_token.surface.lower() in self.rule.final_semivowels:
+                # Check if preceded by consonant
+                if last_nucleus_idx > 0:
+                    prev_idx = last_nucleus_idx - 1
+                    if self.tokens[prev_idx].token_class == TokenClass.CONSONANT:
+                        # Remove this nucleus - it's a semivowel, not a syllable
+                        nuclei.pop()
+
         if nuclei:
             return nuclei
 

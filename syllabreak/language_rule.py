@@ -69,6 +69,7 @@ class LanguageRule:
     modifiers_separators: set[str]
     clusters_only_after_long: set[str]
     split_hiatus: bool
+    final_semivowels: set[str]
     _all_chars: set[str]
 
     def __init__(self, data: dict):
@@ -86,6 +87,7 @@ class LanguageRule:
         self.modifiers_separators = set(data.get("modifiers_separators", ""))
         self.clusters_only_after_long = set(data.get("clusters_only_after_long", []))
         self.split_hiatus = data.get("split_hiatus", False)
+        self.final_semivowels = set(data.get("final_semivowels", ""))
 
         self._all_chars = self.vowels | self.consonants
 
