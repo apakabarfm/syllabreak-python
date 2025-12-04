@@ -94,6 +94,19 @@ rules:
     modifiers_attach_right: ""
     modifiers_separators: ""
 
+  - lang: "por"
+    vowels: "aeiouáàâãéêíóôõúü"
+    consonants: "bcçdfghjklmnpqrstvwxz"
+    sonorants: "lmnr"
+    clusters_keep_next: ["bl", "br", "cl", "cr", "dr", "fl", "fr", "gl", "gr", "pl", "pr", "tr", "vr"]
+    dont_split_digraphs: ["ch", "lh", "nh", "qu", "gu"]
+    digraph_vowels: ["ai", "au", "ei", "eu", "oi", "ou", "ui", "ão", "õe", "ãe"]
+    glides: ""
+    syllabic_consonants: ""
+    modifiers_attach_left: ""
+    modifiers_attach_right: ""
+    modifiers_separators: ""
+
   - lang: "pol"
     vowels: "aeiouyąęó"
     consonants: "bcćdfghjklłmnńprsśtwzźż"

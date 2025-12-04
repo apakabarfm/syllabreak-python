@@ -75,6 +75,14 @@ tests:
       - "être"
       - "père"
 
+  - lang: "por"
+    cases:
+      - "coração"
+      - "irmão"
+      - "avião"
+      - "mãe"
+      - "pão"
+
   - lang: "pol"
     cases:
       - "cześć"
