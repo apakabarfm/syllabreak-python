@@ -75,6 +75,14 @@ tests:
       - "être"
       - "père"
 
+  - lang: "spa"
+    cases:
+      - "español"
+      - "niño"
+      - "señor"
+      - "mañana"
+      - "año"
+
   - lang: "por"
     cases:
       - "coração"
