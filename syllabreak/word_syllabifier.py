@@ -44,9 +44,48 @@ class WordSyllabifier:
                         # Remove this nucleus - it's a semivowel, not a syllable
                         nuclei.pop()
 
+        # Check for syllabic consonants surrounded by other consonants
+        # (e.g., Serbian "r" in "prljav" -> "pr-ljav")
+        # Must have consonant on both sides AND have at least one consonant
+        # between it and the nearest vowel on BOTH sides (not just one)
+        if self.rule.syllabic_consonants and nuclei:
+            syllabic_nuclei = []
+            for i, token in enumerate(self.tokens):
+                if token.token_class != TokenClass.CONSONANT:
+                    continue
+                if token.surface.lower() not in self.rule.syllabic_consonants:
+                    continue
+                # Check if surrounded by consonants (not adjacent to vowels)
+                prev_is_consonant = (i == 0) or (self.tokens[i - 1].token_class == TokenClass.CONSONANT)
+                next_is_consonant = (i == len(self.tokens) - 1) or (self.tokens[i + 1].token_class == TokenClass.CONSONANT)
+                if not (prev_is_consonant and next_is_consonant):
+                    continue
+                # Find distance to nearest vowel before (or word start)
+                dist_to_prev_vowel = i + 1  # default: distance to word start
+                for j in range(i - 1, -1, -1):
+                    if self.tokens[j].token_class == TokenClass.VOWEL:
+                        dist_to_prev_vowel = i - j
+                        break
+                # Find distance to nearest vowel after (or word end)
+                dist_to_next_vowel = len(self.tokens) - i  # default: distance to word end
+                for j in range(i + 1, len(self.tokens)):
+                    if self.tokens[j].token_class == TokenClass.VOWEL:
+                        dist_to_next_vowel = j - i
+                        break
+                # Syllabic consonant only if there's at least one consonant between
+                # it and nearest vowel on BOTH sides (distance > 1)
+                has_buffer_before = dist_to_prev_vowel > 1
+                has_buffer_after = dist_to_next_vowel > 1
+                if has_buffer_before and has_buffer_after:
+                    syllabic_nuclei.append(i)
+            # Merge syllabic consonant nuclei with vowel nuclei
+            if syllabic_nuclei:
+                nuclei = sorted(set(nuclei + syllabic_nuclei))
+
         if nuclei:
             return nuclei
 
+        # Fallback: if no vowels at all, try syllabic consonants anywhere
         for i, token in enumerate(self.tokens):
             if token.token_class == TokenClass.CONSONANT and token.surface.lower() in self.rule.syllabic_consonants:
                 nuclei.append(i)
@@ -118,9 +157,46 @@ class WordSyllabifier:
         # Single vowel is considered short
         return False
 
-    def _find_boundary_for_single_consonant(self, cluster_indices: list[int]) -> int:
-        """V-CV: boundary before single consonant."""
-        return cluster_indices[0]
+    def _find_boundary_for_single_consonant(self, cluster_indices: list[int], nk: int, nk1: int) -> int:
+        """V-CV: boundary before single consonant.
+
+        Exception: Don't split V-r-e patterns (care, here, more) when:
+        - At word end, OR
+        - Before light suffixes (-s, -less, -ful, -ly, -ing, -ed)
+
+        But split AFTER the consonant when followed by breaking suffixes (-ent, -ence, -ency, -ment):
+        - parent -> par-ent, adherent -> ad-her-ent
+        """
+        consonant_idx = cluster_indices[0]
+
+        # Check for protected sequences (like -are, -ere, -ore, -ure, -ire)
+        if self.rule.final_sequences_keep:
+            # Build the sequence from current vowel nucleus through next nucleus
+            sequence = "".join(t.surface.lower() for t in self.tokens[nk:nk1 + 1])
+            if sequence in self.rule.final_sequences_keep:
+                # Get the rest of the word starting from next nucleus (includes the vowel)
+                rest_with_vowel = "".join(t.surface.lower() for t in self.tokens[nk1:])
+                rest_after_vowel = "".join(t.surface.lower() for t in self.tokens[nk1 + 1:])
+
+                # Check if followed by a breaking suffix (par-ent, ad-her-ent)
+                # The suffix starts from the next vowel: "ent" in "par-ent"
+                if self.rule.suffixes_break_vre:
+                    for suffix in self.rule.suffixes_break_vre:
+                        if rest_with_vowel == suffix or rest_with_vowel.startswith(suffix):
+                            # Split after consonant = before next nucleus
+                            return nk1
+
+                # Check if at word end or followed by light suffix (care, care-less)
+                is_at_end = nk1 == len(self.tokens) - 1
+                has_light_suffix = False
+                if self.rule.suffixes_keep_vre and rest_after_vowel:
+                    has_light_suffix = rest_after_vowel in self.rule.suffixes_keep_vre
+
+                if is_at_end or has_light_suffix:
+                    # Don't split - return None to indicate no boundary
+                    return None
+
+        return consonant_idx
 
     def _find_boundary_for_two_consonants(self, cluster: list[Token], cluster_indices: list[int], prev_nucleus_idx: Optional[int] = None) -> int:
         """Determine boundary for two-consonant cluster."""
@@ -165,7 +241,7 @@ class WordSyllabifier:
                 return nk1
             return None
         elif len(cluster) == 1:
-            return self._find_boundary_for_single_consonant(cluster_indices)
+            return self._find_boundary_for_single_consonant(cluster_indices, nk, nk1)
         elif len(cluster) == 2:
             return self._find_boundary_for_two_consonants(cluster, cluster_indices, nk)
         else:

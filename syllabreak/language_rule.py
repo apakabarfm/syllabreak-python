@@ -70,6 +70,9 @@ class LanguageRule:
     clusters_only_after_long: set[str]
     split_hiatus: bool
     final_semivowels: set[str]
+    final_sequences_keep: set[str]
+    suffixes_break_vre: set[str]
+    suffixes_keep_vre: set[str]
     _all_chars: set[str]
 
     def __init__(self, data: dict):
@@ -88,6 +91,9 @@ class LanguageRule:
         self.clusters_only_after_long = set(data.get("clusters_only_after_long", []))
         self.split_hiatus = data.get("split_hiatus", False)
         self.final_semivowels = set(data.get("final_semivowels", ""))
+        self.final_sequences_keep = set(data.get("final_sequences_keep", []))
+        self.suffixes_break_vre = set(data.get("suffixes_break_vre", []))
+        self.suffixes_keep_vre = set(data.get("suffixes_keep_vre", []))
 
         self._all_chars = self.vowels | self.consonants
 

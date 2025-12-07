@@ -7,10 +7,17 @@ rules:
     dont_split_digraphs: ["ch", "sh", "th", "ph", "wh", "ck", "gh", "qu"]
     digraph_vowels: ["ea", "ee", "oo", "ou", "ie", "ei", "ai", "ay", "oy", "oi", "ue"]
     glides: "wy"
-    syllabic_consonants: "lmnr"
+    syllabic_consonants: ""
     modifiers_attach_left: ""
     modifiers_attach_right: ""
     modifiers_separators: ""
+    # Word-final sequences that should not be split (care, here, more, cure, fire)
+    # These are kept together at word end or before light suffixes (-s, -less, -ful, -ly, -ing, -ed)
+    final_sequences_keep: ["are", "ere", "ire", "ore", "ure"]
+    # Suffixes that break V-r-e pattern (parent -> par-ent, adherent -> ad-her-ent)
+    suffixes_break_vre: ["ent", "ents", "ence", "ency", "ment", "ments"]
+    # Light suffixes that don't break V-r-e pattern (care-less, care-ful)
+    suffixes_keep_vre: ["s", "ed", "ing", "less", "ful", "fully", "ly", "ness"]
 
   - lang: "rus"
     vowels: "аеёиоуыэюя"
