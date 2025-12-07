@@ -311,3 +311,5 @@ tests:
         want: "scrip-ta"
       - text: "augustus"
         want: "au-gus-tus"
+      - text: "castle"
+        want: "cast-le"
